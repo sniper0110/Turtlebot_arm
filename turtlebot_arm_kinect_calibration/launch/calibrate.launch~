@@ -1,0 +1,24 @@
+<launch>
+  <!--  *********** Bringup turtlebot arm *********** -->
+  <include file="$(find turtlebot_arm_bringup)/launch/arm.launch" />
+  <!--  *********** Turtlebot arm command *********** -->
+  <include file="$(find turtlebot_arm_bringup)/launch/arm.launch" />
+
+
+
+
+  <!--  ************ Bringup the camera ************* -->
+  <include file="$(find freenect_launch)/launch/freenect.launch" />
+
+  <!--  ************* Calibration stuff ************* -->
+  <node name="calibrate_kinect_checkerboard" pkg="turtlebot_arm_kinect_calibration" type="calibrate_kinect_checkerboard" output="screen">
+    <param name="gripper_tip_x" value="-0.002" />
+    <param name="gripper_tip_y" value="0.020" />
+    <param name="gripper_tip_z" value="-0.0185" />
+  </node>
+
+  <node name="checkerboard_image_view" pkg="image_view" type="image_view">
+    <remap from="image" to="/calibrate_kinect_checkerboard/calibration_pattern_out" />
+    <param name="autosize" value="true" />
+  </node>
+</launch>

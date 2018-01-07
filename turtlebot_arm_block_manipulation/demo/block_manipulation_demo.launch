@@ -1,0 +1,16 @@
+<launch>
+  <include file="$(find freenect_launch)/launch/freenect.launch" />
+
+  <include file="$(find turtlebot_arm_block_manipulation)/launch/block_manipulation.launch" />
+
+  <node name="block_manipulation_demo" pkg="turtlebot_arm_block_manipulation" type="block_manipulation_demo" output="screen" >
+    <param name="arm_link" value="/arm_base_link" />
+    <param name="gripper_open" value="0.05" />
+    <param name="gripper_closed" value="0.01" />
+    <param name="z_up" value="0.05" />
+    <param name="table_height" value="0.5" />
+    <param name="block_size" value="0.02" />
+  </node>
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find turtlebot_arm_block_manipulation)/demo/block_manipulation_demo.rviz" />
+</launch>
