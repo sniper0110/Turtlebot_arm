@@ -66,7 +66,7 @@ This extrinsic calibration procedure works by using a calibration pattern. The k
 
 # Setup
 The setup for the calibration involves Kinect camera that can see the workspace, and a workspace that the arm can reach.
-Next, print out this check_7x6_27mm.pdf calibration pattern on A4 paper and attach it to the workspace, making sure that the arm can reach every point on the pattern.The total set for calibration can be seen in below figure.
+Next, print out this check_7x6_27mm.pdf calibration pattern on A4 paper and attach it to the workspace, making sure that the arm can reach every point on the pattern.The final setup for calibration can be seen in below figure.
 
 
 ![img1](https://user-images.githubusercontent.com/22390134/34654003-9d7e1092-f3f5-11e7-9ba6-24db04b799e4.jpg)
@@ -92,7 +92,12 @@ The next step is to move the edge of the gripper to the four specified points in
 
 
 ## How to change calibration parameters?
+If you're calibrating an external kinect, open up a new terminal window, and run the static transform output by the script, such as 
+```
+rosrun tf static_transform_publisher -0.26683 -0.122903 -0.537733 0.5 -0.499602 0.5 0.500398 /arm_base_link /openni_camera 100
 
+```
+As long as this command runs, the static_transform_publisher will publish the transform between a frame on theTurtleBot and the kinect frame. If you move the physical camera, you will need to recalibrate again.
 ___
 # Results
 Videos and comments
