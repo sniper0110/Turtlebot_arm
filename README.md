@@ -59,6 +59,36 @@ you can see the complete action, detection of cube and Manipulation trajectory p
 
 
 ## How to do calibration?
+To calibrate your camera extrinsic parameters
+Here we have kinect off-board setup allows us to keep our current robot setup, and gives a guaranteed good view of the workspace. However, since the kinect is off-board, it only allows you to use one workspace at a time.
+
+This extrinsic calibration procedure works by using a calibration pattern. The kinect can localize the calibration very precisely, and by moving the arm to certain positions on the pattern, we can calculate the transform between the kinect and any frame on the robot.
+
+# Setup
+The setup for the calibration involves Kinect camera that can see the workspace, and a workspace that the arm can reach.
+Next, print out this check_7x6_27mm.pdf calibration pattern on A4 paper and attach it to the workspace, making sure that the arm can reach every point on the pattern.The total set for calibration can be seen in below figure.
+
+
+![img1](https://user-images.githubusercontent.com/22390134/34654003-9d7e1092-f3f5-11e7-9ba6-24db04b799e4.jpg)
+
+
+
+## Calibration steps
+
+```
+roslaunch turtlebot_arm_bringup arm.launch
+roslaunch turtlebot_arm_kinect_calibration calibrate.launch
+```
+
+This should detect the checkerboard and pop up the image shown below figure, with the calibration pattern edges overlaid and four points marked on the image.
+
+image
+
+The next step is to move the edge of the gripper to the four specified points in order shown in below figure. Note that there is one specific edge you are trying to move: if you orient the arm so that the un-actuated side of the gripper is on the left, it will be the bottom left point. Make sure that your setup matches the one pictured below.
+
+
+![img2](https://user-images.githubusercontent.com/22390134/34654008-ab7bb532-f3f5-11e7-824e-781dc92c156e.jpg)
+
 
 
 ## How to change calibration parameters?
