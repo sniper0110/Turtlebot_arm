@@ -82,7 +82,7 @@ roslaunch turtlebot_arm_kinect_calibration calibrate.launch
 
 This should detect the checkerboard and pop up the image shown below figure, with the calibration pattern edges overlaid and four points marked on the image.
 
-image
+we have to keep the image
 
 The next step is to move the edge of the gripper to the four specified points in order shown in below figure. Note that there is one specific edge you are trying to move: if you orient the arm so that the un-actuated side of the gripper is on the left, it will be the bottom left point. Make sure that your setup matches the one pictured below.
 
