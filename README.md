@@ -60,10 +60,64 @@ Once we finished the steps above, we needed to work on making the process autono
 
 ___
 # Our contribution
+In this section, we will describe our contribution to the pre-existing project, specifically in the **detection** and **autonomy** parts.
+
 ## Detection 
+For the detection, we implemented a method for detecting the cube on top of the turtlebot. The way we did this, is by detecting planes in the point cloud acquired by the Kinect, after this we remove the planes and go through the rest of the __chunks__ or __clusters__ of the point cloud and check whether that cluster is a **green cube** or not. We added the color feature to the detection process because it helped a lot in detecting the cube and in a very short amount of time as well! The drawback of course, is that now we can only detect green cubes. This process is implemented in `Turtlebot_arm/turtlebot_arm_block_manipulation/src/block_detection_action_server.cpp`. Here are some bits of code responsible for doing this.
+
+__How to create a cluster and customize it to look for a cube :__
+```
+    std::vector<pcl::PointIndices> cluster_indices;
+    pcl::EuclideanClusterExtraction<pcl::PointXYZRGB> ec;
+   
+    ec.setClusterTolerance(0.003);
+    ec.setMinClusterSize(100);
+    ec.setMaxClusterSize(2000); 
+
+    ec.setSearchMethod(tree);
+    ec.setInputCloud(cloud_filtered);
+    ec.extract(cluster_indices);
+
+```
+__Adding a virtual block (cube) on top of the detected block :__
+```
+    if (greenSum > blueSum && greenSum > redSum)  // a green cube is used in this project
+         addBlock(xmin , ymin , zmax , angle, (unsigned long) blueSum/pixelCount);
+```
+In fact, we removed two planes before we started searching for the cube, the first plane is of the table and the second one is of the turtlebot top. 
+The point cloud before filtering anything looked like this :
+
+![before_filtering](https://user-images.githubusercontent.com/8482070/34687242-6c06d008-f4ae-11e7-9508-3daa7af8158b.png)  
+![before_filtering2](https://user-images.githubusercontent.com/8482070/34687243-6c37a93a-f4ae-11e7-88f8-922f24164b3f.png)
+
+
+After filtering the table plane, it looked like this :
+
+![filter_table](https://user-images.githubusercontent.com/8482070/34687246-6cb9d07c-f4ae-11e7-8f7f-f7d7bd8c3a82.png)
+![filter_table2](https://user-images.githubusercontent.com/8482070/34687247-6ce42430-f4ae-11e7-9c75-b056bc4108ac.png)
+
+
+And after fitering the robot top, it looked like this :
+
+![filter_robot](https://user-images.githubusercontent.com/8482070/34687244-6c655132-f4ae-11e7-9a44-4b6d1bdc13f8.png)
+![filter_robot2](https://user-images.githubusercontent.com/8482070/34687245-6c9161be-f4ae-11e7-8ebf-63516364adc7.png)
+
+
+We can notice now that there are only some chunks of point clouds left and it will take less time and search to find the cube. The method worked very nicely and we were able to detect the cube in a very short amount of time (from 5 to 15 seconds).
 
 ## Autonomy
+To make the process autonomous (as we described above), we needed to change some parts of the code in `turtlebot_arm_block_manipulation/src/interactive_manipulation_action_server.cpp`. The method is simple, we wait for a message from the turtlebot, this message tells the arm that the turtlebot is well positioned infront of it and that the arm can reach and pick the cube now.
+Here are some code snippets for achieving this task :
 
+```
+    starting_pose = pose; // the pose where the cube was detected
+    ending_pose.position.x = target_X; // target_X is predefined
+    ending_pose.position.y = target_Y; // target_Y is predefined
+    ending_pose.position.z = starting_pose.position.z; 
+    ending_pose.orientation = starting_pose.orientation;
+    
+    moveBlock(starting_pose, ending_pose); // moving the cube from where it was detected to a predefined position on the table
+```
 ___
 # How to?
 
