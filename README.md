@@ -1,8 +1,14 @@
 # Turtlebot_arm
 Turtlebot arm ROS project
 ___
-# Description
-## Introduction
+# Introduction
+## What the complete project is about
+The class project is about implementing a __scenario__ where multiple robots will work together to perform a cetain task. We have a turtlebot and two arms sitting on a table, one is in the **load** area and the other is in the **drop** area. The turtlebot needs to navivate it's way to the **load** area, then, the arm will pick a **cube** from the table and places it on top of the turtlebot once it receives a message from the turtlebot that it has reached the **load** area. Once the placing is done, the turtlebot needs to navigate its way to the **drop** area. After this comes our part of the task. Once the turtlebot reaches the **drop** area, the arm will receive a message from the robot indicating that it is positioned in the right place. After this, we need to detect the cube, then the arm should pick it and place it on top of the table and the task is done! The setup looks like this :
+
+<img width="711" alt="screen shot 2018-01-08 at 17 09 40" src="https://user-images.githubusercontent.com/8482070/34679640-da3ca40c-f496-11e7-9c0f-14f2450fb57e.png">
+
+___
+## Description
 This repository contains all the code necessary to allow the turtlebot arm PhantomX Pincher to perform a specific task along with the Kinect v1. The task is as follows : we will use the kinect to detect a **_green cube_** on top of a turtlebot, the arm then will pick that cube and place it on top of the table -more on the setup can be found in the ***setup*** section.
 
 ## What this readMe file includes
@@ -40,17 +46,17 @@ ___
 In this section we will describe what we have done to ensure things work smoothly.
 
 ## Setup
-For the setup, the environment looks like this :
+For the setup, we have two main components, the turtlebot arm and the Kinect as described in an image below.
 
 
 ## Calibration
 The calibration is needed because we have to make the turtlebot arm work with the Kinect, so when the Kinect detects an object and the arm needs to pick it up, the arm should know where that object is, since the arm has no sensors attached to it, this means we have to use the Kinect as a sensor working closely with the arm, so the calibration is for exactly this task. The calibration process is described below in the __**how to**__ section. 
 
 ## Detection
-
+The detection part is done using the Kinect, we have developped our own method to detect the cube, it will be described in the **Our contribution** section. In the detection, the arm needs to be able to __"know"__ where the cube is using some operations done on the point cloud acquired by the kinect.
 
 ## Autonomy
-
+Once we finished the steps above, we needed to work on making the process autonomous. To do this the arm had to wait for a message from the turtlebot, the message is `vsdone` of type `std_msgs/String` from the topic `/delay/robot_status2`. Once this message is received the detection part starts and when the cube is detected, the arm will pick the cube and place it on top of the table, all of this is done without our interference, that is, we run the launch file `turtlebot_arm_block_manipulation/demo/block_manip_complete.launch` and that's it! The code developed will do the rest.
 
 ___
 # Our contribution
