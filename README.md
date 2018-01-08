@@ -66,7 +66,7 @@ In this section, we will describe our contribution to the pre-existing project, 
 For the detection, we implemented a method for detecting the cube on top of the turtlebot. The way we did this, is by detecting planes in the point cloud acquired by the Kinect, after this we remove the planes and go through the rest of the __chunks__ or __clusters__ of the point cloud and check whether that cluster is a **green cube** or not. We added the color feature to the detection process because it helped a lot in detecting the cube and in a very short amount of time as well! The drawback of course, is that now we can only detect green cubes. This process is implemented in `Turtlebot_arm/turtlebot_arm_block_manipulation/src/block_detection_action_server.cpp`. Here are some bits of code responsible for doing this.
 
 __How to create a cluster and customize it to look for a cube :__
-```
+```c++
     std::vector<pcl::PointIndices> cluster_indices;
     pcl::EuclideanClusterExtraction<pcl::PointXYZRGB> ec;
    
@@ -80,7 +80,7 @@ __How to create a cluster and customize it to look for a cube :__
 
 ```
 __Adding a virtual block (cube) on top of the detected block :__
-```
+```c++
     if (greenSum > blueSum && greenSum > redSum)  // a green cube is used in this project
          addBlock(xmin , ymin , zmax , angle, (unsigned long) blueSum/pixelCount);
 ```
@@ -109,7 +109,7 @@ We can notice now that there are only some chunks of point clouds left and it wi
 To make the process autonomous (as we described above), we needed to change some parts of the code in `turtlebot_arm_block_manipulation/src/interactive_manipulation_action_server.cpp`. The method is simple, we wait for a message from the turtlebot, this message tells the arm that the turtlebot is well positioned infront of it and that the arm can reach and pick the cube now.
 Here are some code snippets for achieving this task :
 
-```
+```c++
     starting_pose = pose; // the pose where the cube was detected
     ending_pose.position.x = target_X; // target_X is predefined
     ending_pose.position.y = target_Y; // target_Y is predefined
@@ -123,7 +123,7 @@ ___
 
 
 ## How to test the code?
-To run project from this repository you need Ubuntu 14.04 version and ROS Indigo igloo distribution.
+To run the project from this repository you need Ubuntu 14.04 version and ROS Indigo igloo distribution.
 If you do not have an active ROS workspace, you can create one by:
 
 ```
@@ -142,29 +142,27 @@ $ cd ~/catkin_ws
 $ catkin_make
 ```
 
-In terminal to run the demo code
+Type the following in a terminal to run the demo code :
 ```
 $roscd turtlebot_arm_block_manipulation\demo
 $roslaunch block_manip_complete.launch.
 ```
-Once all these items are confirmed,  rviz window is opened with the workspace.
+Once all these items are confirmed,  rviz window will be opened with the workspace.
 you can see the complete action, detection of cube and Manipulation trajectory performed sucessfully.
 
 
 ## How to do calibration?
 To calibrate your camera extrinsic parameters
-Here we have kinect off-board setup allows us to keep our current robot setup, and gives a guaranteed good view of the workspace. However, since the kinect is off-board, it only allows you to use one workspace at a time.
+Here we have a kinect off-board setup, which gives a guaranteed good view of the workspace.
+This extrinsic calibration procedure works by using a calibration pattern. The kinect can localize the calibration very precisely, and by moving the arm to certain positions on the pattern, we can calculate the transform between the kinect and any frame on the robot. It is **very important** to mention the following remarksl; 1) The setup we worked with is when the 2 servo-motors (the one for the wrist and the one for the shoulder spin) are on the same side. 2) With the previously mentioned remark, we used the left side of the gripper for calibrating the setup, that is, we put the **__bottom__** corner of the **__left__** gripper on each of the 4 points on the pattern. If you choose a different setup, then you should take this into consideration. The following image shows how this exact setup looks like :
 
-This extrinsic calibration procedure works by using a calibration pattern. The kinect can localize the calibration very precisely, and by moving the arm to certain positions on the pattern, we can calculate the transform between the kinect and any frame on the robot.
+insert_image_2_servos
 
 ### Setup
 The setup for the calibration involves Kinect camera that can see the workspace, and a workspace that the arm can reach.
-Next, print out this check_7x6_27mm.pdf calibration pattern on A4 paper and attach it to the workspace, making sure that the arm can reach every point on the pattern.The final setup for calibration can be seen in below figure.
-
+Next, you need to print out this [check_7x6_27mm.pdf](http://wiki.ros.org/turtlebot_kinect_arm_calibration/Tutorials/CalibratingKinectToTurtleBotArm?action=AttachFile&do=view&target=check_7x6_27mm.pdf) calibration pattern on A4 paper and attach it to the workspace, making sure that the arm can reach every point on the pattern.The final setup for calibration can be seen in below figure :
 
 ![img1](https://user-images.githubusercontent.com/22390134/34654003-9d7e1092-f3f5-11e7-9ba6-24db04b799e4.jpg)
-
-
 
 ### Calibration steps
 
@@ -173,34 +171,48 @@ roslaunch turtlebot_arm_bringup arm.launch
 roslaunch turtlebot_arm_kinect_calibration calibrate.launch
 ```
 
-This should detect the checkerboard and pop up the image shown below figure, with the calibration pattern edges overlaid and four points marked on the image.
+This should detect the checkerboard and pop-up the image shown in the below figure, with the calibration pattern edges overlaid and four points marked on the image.
 
-we have to keep the image
+pattern_im
 
-The next step is to move the edge of the gripper to the four specified points in order shown in below figure. Note that there is one specific edge you are trying to move: if you orient the arm so that the un-actuated side of the gripper is on the left, it will be the bottom left point. Make sure that your setup matches the one pictured below.
+The next step is to move the edge of the gripper to the four specified points in the order shown in the below figure. Again, note that there is one specific edge you are trying to move: if you orient the arm so that the un-actuated side of the gripper is on the left, it will be the bottom left point. Make sure that your setup matches the one pictured below.
 
 
 ![img2](https://user-images.githubusercontent.com/22390134/34654008-ab7bb532-f3f5-11e7-824e-781dc92c156e.jpg)
 
 
-
 ## How to change calibration parameters?
-If you're calibrating an external kinect, open up a new terminal window, and run the static transform output by the script, such as 
+Once the calibration process is finished, a set of parameters will be shown on the terminal. If you're just testing your calibration, you can open up a new terminal window, and run the static transform output by the script, an example would be :
 ```
 rosrun tf static_transform_publisher -0.26683 -0.122903 -0.537733 0.5 -0.499602 0.5 0.500398 /arm_base_link /openni_camera 100
 
 ```
-As long as this command runs, the static_transform_publisher will publish the transform between a frame on theTurtleBot and the kinect frame. If you move the physical camera, you will need to recalibrate again.
+As long as this command runs, the static_transform_publisher will publish the transform between a frame on theTurtleBot and the kinect frame. If you move the physical camera, you will need to recalibrate again. 
+Once you are sure that your setup is correctly calibrated, you should add the parameters in the launch file found in `turtlebot_arm_block_manipulation/demo/block_manip_complete.launch`, the last lines of the file show where to add the parameters. An example would be : 
+```
+<node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="0.552972 0.0311763 1.01794 -0.485351 0.0823443 0.864462 0.101775 /base_link /camera_link 100"/>
+```
+
+## How to run the code without the need of the complete setup (the turtlebot)
+If you would like to test the code with only the arm and the Kinect without having a turtlebot to send you a message, you can simply :
+  1. Launch the _launch file_ from a terminal.
+  2. On a second terminal, send the message `vsdone` to the topic `/relay/robot_status2`, which means you are simulating the process of 
+  receiving a message from the turtlebot.
 ___
 # Results
 Videos and comments
 
 ___
 # Problems encountered
+During the course of this project, we encountred many problems :
+  1. The calibration was perfect in the beginning, but after a few weeks and when we decided to change the setup and move the kinect to allow a better view of the workspace, the calibration started becoming harder to align the virtual robot and the real one. To overcome this problem, we changed the setup a few times by changing how the arm was positioned on the table and also by moving the Kinect, in the end we were able to make it work.
+  2. The detection (before we changed it) was meant to work on the table only. For our case, we needed to detect the cube on top of the turtlebot, the top of the robot was a little higher than the table, so the pre-existing detection code did not work; that's why we modified the code to work with our setup and it performed very nicely.
 
 ___
 # Suggested improvements
-## Detection for any color
+There are many improvements that could be made to this project such as :
+  * Detecting a cube of any color.
+  * 
 
 ___
 # Conclusion
