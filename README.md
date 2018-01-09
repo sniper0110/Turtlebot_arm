@@ -13,24 +13,24 @@ This repository contains all the code necessary to allow the turtlebot arm Phant
 
 ## What this readMe file includes
 In this readMe file you will find explanations regarding the following sections :
-  * A summary of the code files used.
-  * Steps taken by our team to ensure the task is working properly including :
-    * Setting up the environment.
-    * Calibrating the Kinect to work properly with the turtlebot arm.
-    * Detection of the cube using the Kinect.
-    * Making the process of detection and picking_and_placing autonomous.
-  * Our contribution to the pre-existing repository that could be found [here](https://github.com/NathanCrombez/turtlebot_arm), specifically regarding :
-    * Detection using the Kinect.
-    * Making the complete process autonomous.
-  * How to? A tutorial-like section on how to :
-    * Run and test our code.
-    * Calibrate the Kinect to work with turtlebot arm.
-    * Change the calibration parameters in the launch file to make things work with your specific setup.
-  * Results obtained.
-  * Problems encountred.
-  * Suggested improvements.
-  * Conclusion.
-  * References.
+  * [A summary of the code files used.](https://github.com/sniper0110/Turtlebot_arm#summary-of-code-files)
+  * [Steps taken by our team to ensure the task is working properly including](https://github.com/sniper0110/Turtlebot_arm#steps) :
+    * [Setting up the environment.](https://github.com/sniper0110/Turtlebot_arm#setup)
+    * [Calibrating the Kinect to work properly with the turtlebot arm.](https://github.com/sniper0110/Turtlebot_arm#calibration)
+    * [Detection of the cube using the Kinect.](https://github.com/sniper0110/Turtlebot_arm#detection)
+    * [Making the process of detection and picking_and_placing autonomous.](https://github.com/sniper0110/Turtlebot_arm#autonomy)
+  * [Our contribution](https://github.com/sniper0110/Turtlebot_arm#our-contribution) to the pre-existing repository that could be found [here](https://github.com/NathanCrombez/turtlebot_arm), specifically regarding :
+    * [Detection using the Kinect.](https://github.com/sniper0110/Turtlebot_arm#detection-1)
+    * [Making the complete process autonomous.](https://github.com/sniper0110/Turtlebot_arm#autonomy-1)
+  * [How to?](https://github.com/sniper0110/Turtlebot_arm#how-to) A tutorial-like section on how to :
+    * [Run and test our code.](https://github.com/sniper0110/Turtlebot_arm#how-to-test-the-code)
+    * [Calibrate the Kinect to work with turtlebot arm.](https://github.com/sniper0110/Turtlebot_arm#how-to-do-calibration)
+    * [Change the calibration parameters in the launch file to make things work with your specific setup.](https://github.com/sniper0110/Turtlebot_arm#how-to-change-calibration-parameters)
+  * [Results obtained.](https://github.com/sniper0110/Turtlebot_arm#results)
+  * [Problems encountred.](https://github.com/sniper0110/Turtlebot_arm#problems-encountered)
+  * [Suggested improvements.](https://github.com/sniper0110/Turtlebot_arm#suggested-improvements)
+  * [Conclusion.](https://github.com/sniper0110/Turtlebot_arm#conclusion)
+  * [References.](https://github.com/sniper0110/Turtlebot_arm#references)
   
 
 ## Summary of code files
@@ -46,9 +46,9 @@ ___
 In this section we will describe what we have done to ensure things work smoothly.
 
 ## Setup
-For the setup, we have two main components, the turtlebot arm and the Kinect as described in the image below :
+For the setup, we have two main components, the turtlebot arm and the Kinect. There is also a turtlebot shown in the figure below to show the stage where the turtlebot reaches the **drop area** :
 
-first_setup_image
+![setup_before_anything](https://user-images.githubusercontent.com/8482070/34739317-2fad5f0e-f57c-11e7-9beb-9e138398dd08.jpg)
 
 
 ## Calibration
@@ -146,8 +146,8 @@ $ catkin_make
 
 Type the following in a terminal to run the demo code :
 ```
-$roscd turtlebot_arm_block_manipulation\demo
-$roslaunch block_manip_complete.launch.
+$ roscd turtlebot_arm_block_manipulation/demo
+$ roslaunch block_manip_complete.launch.
 ```
 Once all these items are confirmed,  rviz window will be opened with the workspace.
 you can see the complete action, detection of cube and Manipulation trajectory performed sucessfully.
@@ -158,13 +158,19 @@ To calibrate your camera extrinsic parameters
 Here we have a kinect off-board setup, which gives a guaranteed good view of the workspace.
 This extrinsic calibration procedure works by using a calibration pattern. The kinect can localize the calibration very precisely, and by moving the arm to certain positions on the pattern, we can calculate the transform between the kinect and any frame on the robot. It is **very important** to mention the following remarksl; 1) The setup we worked with is when the 2 servo-motors (the one for the wrist and the one for the shoulder spin) are on the same side. 2) With the previously mentioned remark, we used the left side of the gripper for calibrating the setup, that is, we put the **__bottom__** corner of the **__left__** gripper on each of the 4 points on the pattern. If you choose a different setup, then you should take this into consideration. The following image shows how this exact setup looks like :
 
-insert_image_2_servos
+![2_servos_straight](https://user-images.githubusercontent.com/8482070/34738799-7d3b9e5e-f57a-11e7-93d5-457829f33b89.jpg)
+
+Another view :
+
+![2_servos](https://user-images.githubusercontent.com/8482070/34738800-7ea42748-f57a-11e7-9ad1-d68b5b893bb4.jpg)
 
 ### Setup
 The setup for the calibration involves Kinect camera that can see the workspace, and a workspace that the arm can reach.
 Next, you need to print out this [check_7x6_27mm.pdf](http://wiki.ros.org/turtlebot_kinect_arm_calibration/Tutorials/CalibratingKinectToTurtleBotArm?action=AttachFile&do=view&target=check_7x6_27mm.pdf) calibration pattern on A4 paper and attach it to the workspace, making sure that the arm can reach every point on the pattern.The final setup for calibration can be seen in below figure :
 
 ![img1](https://user-images.githubusercontent.com/22390134/34654003-9d7e1092-f3f5-11e7-9ba6-24db04b799e4.jpg)
+
+
 
 ### Calibration steps
 
@@ -175,7 +181,7 @@ roslaunch turtlebot_arm_kinect_calibration calibrate.launch
 
 This should detect the checkerboard and pop-up the image shown in the below figure, with the calibration pattern edges overlaid and four points marked on the image.
 
-pattern_im
+![4corners](https://user-images.githubusercontent.com/8482070/34738802-7f5d5df8-f57a-11e7-868b-4e7038adec64.png)
 
 The next step is to move the edge of the gripper to the four specified points in the order shown in the below figure. Again, note that there is one specific edge you are trying to move: if you orient the arm so that the un-actuated side of the gripper is on the left, it will be the bottom left point. Make sure that your setup matches the one pictured below.
 
@@ -199,10 +205,19 @@ Once you are sure that your setup is correctly calibrated, you should add the pa
 If you would like to test the code with only the arm and the Kinect without having a turtlebot to send you a message, you can simply :
   1. Launch the _launch file_ from a terminal.
   2. On a second terminal, send the message `vsdone` to the topic `/relay/robot_status2`, which means you are simulating the process of 
-  receiving a message from the turtlebot.
+  receiving a message from the turtlebot. The command that you will be using on this new terminal is : `rostopic pub -r 1000 /relay/robot_status2 std_msgs/String "vsdone"`.
+  
+The complete tutorial can be found here : no_comp_vid
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/qFWVuZJL8iU/0.jpg)](https://www.youtube.com/watch?v=qFWVuZJL8iU)
+ 
 ___
 # Results
-Videos and comments
+We obtained some very nice results that can be seen in the below video :
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/jgKtQxnRqao/0.jpg)](https://www.youtube.com/watch?v=jgKtQxnRqao)
+
+We can see clearly how the robotic arm was able to pick the cube after it was detected using the Kinect and it placed it on top of the table.
 
 ___
 # Problems encountered
@@ -218,8 +233,7 @@ There are many improvements that could be made to this project such as :
 
 ___
 # Conclusion
-
-HELLO, IT'S ME. CAN YOU SEE ME?
+In this project, we were able to implement a working version of a scenario where the **turtlebot arm** will wait for a message coming from a **turtlebot** then a process of detection will be launched where the **Kinect** will detect the presence of a **green** cube, after this the **robotic arm** will pick the cube and place it on top of the table in a position that is hardcoded. We faced some difficulties throught the duration of the project, but we were able to successfully overcome them. 
 ___
 # References
 
