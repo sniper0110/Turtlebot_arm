@@ -3,7 +3,7 @@ Turtlebot arm ROS project
 ___
 # Introduction
 ## What the complete project is about
-The class project is about implementing a __scenario__ where multiple robots will work together to perform a cetain task. We have a turtlebot and two arms sitting on a table, one is in the **load** area and the other is in the **drop** area. The turtlebot needs to navivate it's way to the **load** area, then, the arm will pick a **cube** from the table and places it on top of the turtlebot once it receives a message from the turtlebot that it has reached the **load** area. Once the placing is done, the turtlebot needs to navigate its way to the **drop** area. After this comes our part of the task. Once the turtlebot reaches the **drop** area, the arm will receive a message from the robot indicating that it is positioned in the right place. After this, we need to detect the cube, then the arm should pick it and place it on top of the table and the task is done! The setup looks like this :
+The class project is about implementing a __scenario__ where multiple robots will work together to perform a cetain task. We have a turtlebot and two arms sitting on two seperate tables, one is in the **load** area and the other is in the **drop** area. The turtlebot needs to navivate its way to the **load** area, then, the arm will pick a **cube** from the table and places it on top of the turtlebot, this happens once it receives a message from the turtlebot that it has reached the **load** area. Once the placing is done, the turtlebot needs to navigate its way to the **drop** area. After this comes our part of the task. Once the turtlebot reaches the **drop** area, the arm will receive a message from the robot indicating that it is positioned in the right place. After this, we need to detect the cube, then the arm should pick it and place it on top of the table and the task is done! The setup looks like this :
 
 <img width="711" alt="screen shot 2018-01-08 at 17 09 40" src="https://user-images.githubusercontent.com/8482070/34679640-da3ca40c-f496-11e7-9c0f-14f2450fb57e.png">
 
@@ -19,7 +19,7 @@ In this readMe file you will find explanations regarding the following sections 
     * [Calibrating the Kinect to work properly with the turtlebot arm.](https://github.com/sniper0110/Turtlebot_arm#calibration)
     * [Detection of the cube using the Kinect.](https://github.com/sniper0110/Turtlebot_arm#detection)
     * [Making the process of detection and picking_and_placing autonomous.](https://github.com/sniper0110/Turtlebot_arm#autonomy)
-  * [Our contribution](https://github.com/sniper0110/Turtlebot_arm#our-contribution) to the pre-existing repository that could be found [here](https://github.com/NathanCrombez/turtlebot_arm), specifically regarding :
+  * [Our contribution](https://github.com/sniper0110/Turtlebot_arm#our-contribution) to the pre-existing repository (that could be found [here](https://github.com/NathanCrombez/turtlebot_arm)), specifically regarding :
     * [Detection using the Kinect.](https://github.com/sniper0110/Turtlebot_arm#detection-1)
     * [Making the complete process autonomous.](https://github.com/sniper0110/Turtlebot_arm#autonomy-1)
   * [How to?](https://github.com/sniper0110/Turtlebot_arm#how-to) A tutorial-like section on how to :
@@ -105,11 +105,21 @@ And after fitering the robot top, it looked like this :
 ![filter_robot2](https://user-images.githubusercontent.com/8482070/34687245-6c9161be-f4ae-11e7-8ebf-63516364adc7.png)
 
 
-We can notice now that there are only some chunks of point clouds left and it will take less time and search to find the cube. The method worked very nicely and we were able to detect the cube in a very short amount of time (from 5 to 15 seconds).
+We can notice now that there are only some chunks of point clouds left and it will take less time in the search process to find the cube. The method worked very nicely and we were able to detect the cube in a very short amount of time.
 
 ## Autonomy
 To make the process autonomous (as we described above), we needed to change some parts of the code in `turtlebot_arm_block_manipulation/src/interactive_manipulation_action_server.cpp`. The method is simple, we wait for a message from the turtlebot, this message tells the arm that the turtlebot is well positioned infront of it and that the arm can reach and pick the cube now.
 Here are some code snippets for achieving this task :
+```c++
+void moveCB(const std_msgs::String::ConstPtr& msg) // callback function
+  {
+      if (std::strcmp(msg->data.c_str(), "vsdone") == 0 && armMode != "d")
+      {
+          detectBlocks(); armMode="d";
+      }
+  }
+```
+And :
 
 ```c++
     starting_pose = pose; // the pose where the cube was detected
@@ -156,7 +166,10 @@ you can see the complete action, detection of cube and Manipulation trajectory p
 ## How to do calibration?
 To calibrate your camera extrinsic parameters
 Here we have a kinect off-board setup, which gives a guaranteed good view of the workspace.
-This extrinsic calibration procedure works by using a calibration pattern. The kinect can localize the calibration very precisely, and by moving the arm to certain positions on the pattern, we can calculate the transform between the kinect and any frame on the robot. It is **very important** to mention the following remarksl; 1) The setup we worked with is when the 2 servo-motors (the one for the wrist and the one for the shoulder spin) are on the same side. 2) With the previously mentioned remark, we used the left side of the gripper for calibrating the setup, that is, we put the **__bottom__** corner of the **__left__** gripper on each of the 4 points on the pattern. If you choose a different setup, then you should take this into consideration. The following image shows how this exact setup looks like :
+This extrinsic calibration procedure works by using a calibration pattern. The kinect can localize the calibration very precisely, and by moving the arm to certain positions on the pattern, we can calculate the transform between the kinect and any frame on the robot. It is **very important** to mention the following remarks :
+
+1.  The setup we worked with is when the 2 servo-motors (the one for the wrist and the one for the shoulder spin) are on the same side. 
+2.  With the previously mentioned remark, we used the left side of the gripper for calibrating the setup, that is, we put the **__bottom__** corner of the **__left__** gripper on each of the 4 points on the pattern. If you choose a different setup, then you should take this into consideration. The following images shows how this exact setup looks like :
 
 ![2_servos_straight](https://user-images.githubusercontent.com/8482070/34738799-7d3b9e5e-f57a-11e7-93d5-457829f33b89.jpg)
 
@@ -173,29 +186,30 @@ Next, you need to print out this [check_7x6_27mm.pdf](http://wiki.ros.org/turtle
 
 
 ### Calibration steps
+Type the following commands in a terminal :
 
 ```
 roslaunch turtlebot_arm_bringup arm.launch
 roslaunch turtlebot_arm_kinect_calibration calibrate.launch
 ```
 
-This should detect the checkerboard and pop-up the image shown in the below figure, with the calibration pattern edges overlaid and four points marked on the image.
+This should detect the checkerboard and pop-up the image shown in the figure below, with the calibration pattern edges overlaid and four points marked on the image.
 
 ![4corners](https://user-images.githubusercontent.com/8482070/34738802-7f5d5df8-f57a-11e7-868b-4e7038adec64.png)
 
-The next step is to move the edge of the gripper to the four specified points in the order shown in the below figure. Again, note that there is one specific edge you are trying to move: if you orient the arm so that the un-actuated side of the gripper is on the left, it will be the bottom left point. Make sure that your setup matches the one pictured below.
+The next step is to move the edge of the gripper to the four specified points in the order shown in the below figure. Again, note that there is one specific edge you are trying to move, make sure that your setup matches the one pictured below.
 
 
 ![img2](https://user-images.githubusercontent.com/22390134/34654008-ab7bb532-f3f5-11e7-824e-781dc92c156e.jpg)
 
 
 ## How to change calibration parameters?
-Once the calibration process is finished, a set of parameters will be shown on the terminal. If you're just testing your calibration, you can open up a new terminal window, and run the static transform output by the script, an example would be :
+Once the calibration process is finished, a set of parameters will be shown on the terminal. If you're just testing your calibration, you can open up a new terminal window, and run the static transform output by the script on the terminal, an example would be :
 ```
 rosrun tf static_transform_publisher -0.26683 -0.122903 -0.537733 0.5 -0.499602 0.5 0.500398 /arm_base_link /openni_camera 100
 
 ```
-As long as this command runs, the static_transform_publisher will publish the transform between a frame on theTurtleBot and the kinect frame. If you move the physical camera, you will need to recalibrate again. 
+As long as this command runs, the static_transform_publisher will publish the transform between a frame on the turtlebot and the kinect frame. If you move the physical camera or the arm's base, you will need to recalibrate again. 
 Once you are sure that your setup is correctly calibrated, you should add the parameters in the launch file found in `turtlebot_arm_block_manipulation/demo/block_manip_complete.launch`, the last lines of the file show where to add the parameters. An example would be : 
 ```
 <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="0.552972 0.0311763 1.01794 -0.485351 0.0823443 0.864462 0.101775 /base_link /camera_link 100"/>
@@ -222,18 +236,18 @@ We can see clearly how the robotic arm was able to pick the cube after it was de
 ___
 # Problems encountered
 During the course of this project, we encountred many problems :
-  1. The calibration was perfect in the beginning, but after a few weeks and when we decided to change the setup and move the kinect to allow a better view of the workspace, the calibration started becoming harder to align the virtual robot and the real one. To overcome this problem, we changed the setup a few times by changing how the arm was positioned on the table and also by moving the Kinect, in the end we were able to make it work.
+  1. The calibration was perfect in the beginning, but after a few weeks and when we decided to change the setup and move the kinect to allow a better view of the workspace, the calibration started becoming harder and it became difficult to align the virtual robot with the real one. To overcome this problem, we changed the setup a few times by changing how the arm was positioned on the table and also by moving the Kinect, in the end we were able to make it work.
   2. The detection (before we changed it) was meant to work on the table only. For our case, we needed to detect the cube on top of the turtlebot, the top of the robot was a little higher than the table, so the pre-existing detection code did not work; that's why we modified the code to work with our setup and it performed very nicely.
 
 ___
 # Suggested improvements
 There are many improvements that could be made to this project such as :
-  * Detecting a cube of any color.
-  * The camera calibration could also be improved. Currently, variations in surrounding lightings affect the object detection. Using an additional lighting source will minimize the lighting issue that come from shadows which consequently will make the detection part easier.
+  * Detecting a cube of any color : Our code only works with green cubes, so it would be a good improvement if the program could detect cubes of any color.
+  * The camera calibration could also be improved. Currently, variations in surrounding lightings affect the object detection. Using an additional lighting source will minimize the lighting issue that come from shadows which will consequently make the detection part easier.
 
 ___
 # Conclusion
-In this project, we were able to implement a working version of a scenario where the **turtlebot arm** will wait for a message coming from a **turtlebot** then a process of detection will be launched where the **Kinect** will detect the presence of a **green** cube, after this the **robotic arm** will pick the cube and place it on top of the table in a position that is hardcoded. We faced some difficulties throught the duration of the project, but we were able to successfully overcome them. 
+In this project, we were able to implement a working version of a scenario where the **turtlebot arm** will wait for a message coming from a **turtlebot** then a process of detection will be launched where the **Kinect** will detect the presence of a **green** cube, after this the **robotic arm** will pick the cube and place it on top of the table in a position that is hardcoded. We faced some difficulties throughout the duration of the project, but we were able to successfully overcome them. 
 ___
 # References
 [ROS official website](http://www.ros.org/)
