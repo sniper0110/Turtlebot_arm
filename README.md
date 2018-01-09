@@ -207,9 +207,9 @@ If you would like to test the code with only the arm and the Kinect without havi
   2. On a second terminal, send the message `vsdone` to the topic `/relay/robot_status2`, which means you are simulating the process of 
   receiving a message from the turtlebot. The command that you will be using on this new terminal is : `rostopic pub -r 1000 /relay/robot_status2 std_msgs/String "vsdone"`.
   
-The complete tutorial can be found here : no_comp_vid
+The complete tutorial can be found here : 
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/qFWVuZJL8iU/0.jpg)](https://www.youtube.com/watch?v=qFWVuZJL8iU)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/HCJ9iFsEk_Y/0.jpg)](https://www.youtube.com/watch?v=HCJ9iFsEk_Y)
  
 ___
 # Results
