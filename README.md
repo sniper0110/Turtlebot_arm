@@ -229,7 +229,7 @@ ___
 # Suggested improvements
 There are many improvements that could be made to this project such as :
   * Detecting a cube of any color.
-  * 
+  * The camera calibration could also be improved. Currently, variations in surrounding lightings affect the object detection. Using an additional lighting source will minimize the lighting issue that come from shadows which consequently will make the detection part easier.
 
 ___
 # Conclusion
