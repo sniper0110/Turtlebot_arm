@@ -237,7 +237,9 @@ In this project, we were able to implement a working version of a scenario where
 ___
 # References
 [http://www.ros.org/](http://www.ros.org/)
+
 [http://www.iroboapp.org/index.php?title=Getting_Started_with_Turtlebot_Arm_PhantomX_Pincher_with_ROS](http://www.iroboapp.org/index.php?title=Getting_Started_with_Turtlebot_Arm_PhantomX_Pincher_with_ROS)
+
 [http://pointclouds.org/](http://pointclouds.org/)
 
 
