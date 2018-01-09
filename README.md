@@ -46,7 +46,9 @@ ___
 In this section we will describe what we have done to ensure things work smoothly.
 
 ## Setup
-For the setup, we have two main components, the turtlebot arm and the Kinect as described in an image below.
+For the setup, we have two main components, the turtlebot arm and the Kinect as described in the image below :
+
+first_setup_image
 
 
 ## Calibration
