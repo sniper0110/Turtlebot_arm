@@ -72,8 +72,8 @@ __How to create a cluster and customize it to look for a cube :__
     std::vector<pcl::PointIndices> cluster_indices;
     pcl::EuclideanClusterExtraction<pcl::PointXYZRGB> ec;
    
-    ec.setClusterTolerance(0.003);
-    ec.setMinClusterSize(100);
+    ec.setClusterTolerance(0.003); /* The spatial cluster tolerance as a measure in the L2 Euclidean space. */
+    ec.setMinClusterSize(100); 
     ec.setMaxClusterSize(2000); 
 
     ec.setSearchMethod(tree);
@@ -236,6 +236,9 @@ ___
 In this project, we were able to implement a working version of a scenario where the **turtlebot arm** will wait for a message coming from a **turtlebot** then a process of detection will be launched where the **Kinect** will detect the presence of a **green** cube, after this the **robotic arm** will pick the cube and place it on top of the table in a position that is hardcoded. We faced some difficulties throught the duration of the project, but we were able to successfully overcome them. 
 ___
 # References
+[http://www.ros.org/](http://www.ros.org/)
+[http://www.iroboapp.org/index.php?title=Getting_Started_with_Turtlebot_Arm_PhantomX_Pincher_with_ROS](http://www.iroboapp.org/index.php?title=Getting_Started_with_Turtlebot_Arm_PhantomX_Pincher_with_ROS)
+[http://pointclouds.org/](http://pointclouds.org/)
 
 
 
