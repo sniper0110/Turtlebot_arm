@@ -366,28 +366,4 @@ int main(int argc, char** argv)
   turtlebot_arm_block_manipulation::BlockManipulationAction manip;
   
   ros::spin();
-  // everything is done in cloud callback, just spin
-  //ros::AsyncSpinner spinner(2);
-  //spinner.start();
-
-  //while (ros::ok())
-  //{
-    // Allow user restarting, in case block detection fails
-    /*std::cout << "d - Detect, m - Move" << std::endl;
-    
-     std::string instr;
-     getline (std::cin, instr );
-     
-     if (instr == "d") {
-         manip.detectBlocks(); manip.armMode="d";
-         if (manip.block_exist){
-             std::cout << "block_exist is true" << std::endl;
-             manip.organizeBlocks();
-             manip.armMode="m";
-         }
-     }
-     if (instr == "m") {manip.organizeBlocks();manip.armMode="m";}*/
-  //}
-
-  //spinner.stop();
 }
